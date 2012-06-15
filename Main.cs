@@ -43,6 +43,7 @@ namespace GrassCut_Regions
             {
                 if (!Directory.Exists(savepath))
                     Directory.CreateDirectory(savepath);
+                SetupDb();
             }
             catch (Exception ex) { Log.ConsoleError(ex.ToString()); }
             Commands.ChatCommands.Add(new Command("grasscutregions", grassCutCommand, "grasscut"));
@@ -111,7 +112,7 @@ namespace GrassCut_Regions
                         if (reg != null && reg.InArea(args.X, args.Y))
                         {
                             WorldGen.KillTile(args.X, args.Y);
-                            args.Player.SendTileSquare(args.X, args.Y, 3);
+                            TSPlayer.All.SendTileSquare(args.X, args.Y, 3);
                             args.Handled = true;
                             break;
                         }
@@ -168,7 +169,7 @@ namespace GrassCut_Regions
                                 {
                                     if (reg != null && reg.Name == regionName)
                                     {
-                                        db.Query("DELETE FROM Regions WHERE Name = @0 AND WorldID = @0", regionName, Main.worldID);
+                                        db.Query("DELETE FROM Regions WHERE Name = @0 AND WorldID = @1", regionName, Main.worldID);
                                         regionList.Remove(reg);
                                         args.Player.SendMessage(String.Format("Region '{0}' removed", regionName), Color.Yellow);
                                         return;
